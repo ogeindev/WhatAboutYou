@@ -138,17 +138,15 @@ export default {
       ],
       category: 'Todos',
       categorylist: '', 
-      filtercat: []   
+      filtercat: []  
     }
   },
   mounted:  function() {
      this.getArticles()      
   },
   methods: {
-
-     getArticles(){
+     getArticles(){ 
        axios.get('http://localhost:3000/getArticles')
-    
       .then(response => this.allArticles = response.data)
       .catch(error => {
         if (!error.response) {
@@ -159,27 +157,27 @@ export default {
         }
       })
     },
-    paginate(filtercat) {
+    paginate(categoryFilter) {
       let page = this.page;
       let perPage = this.perPage;
       let from = page * perPage - perPage;
       let to = page * perPage;
-      return filtercat.slice(from, to);
+      return categoryFilter.slice(from, to);
     },
     setPaginate() {
-      let numberOfPages = Math.ceil(this.filtercat.length / this.perPage);
+     
+      let numberOfPages = Math.ceil(this.categoryFilter.length / this.perPage);
       for (let i = 1; i <= numberOfPages; i++) {
-        this.pages.push(i);
+      this.pages.push(i); 
+      
       }
     },
     changeCategory(cat){ 
       this.category = this.category.replace(this.category, cat)
-      console.log(this.category, cat)
-    },
-    
+    },  
   },
   computed: {
-     paginateArticles() {  
+     paginateArticles() { 
       return  this.paginate(this.categoryFilter);
     },
     isLoggedIn: function() {
@@ -191,17 +189,21 @@ export default {
     },
     categoryFilter(){
        if(this.category == 'Todos'){
+        
           let filter1 = this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter1
+          console.log(this.filtercat)
           return this.filtercat
         } 
-        else if (this.category == 'Psychology'){
+         else if (this.category == 'Psychology'){
+      
           let filter1= this.allArticles.filter((article) => article.categoryarticle.includes('Psychology'))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter1
           return this.filtercat
         }
         else if (this.category == 'Social Life'){
+       
           let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Social Life'))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter1
@@ -219,27 +221,27 @@ export default {
           this.filtercat = filter1
           return this.filtercat
         }
-        else if (this.category == 'Mistery'){
+         if (this.category == 'Mistery'){
           let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Mistery'))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter1
           return this.filtercat
         }
-        else if (this.category == 'Others'){
+         else if (this.category == 'Others'){
            let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Others'))
            let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
            this.filtercat = filter1
            return this.filtercat
-
         }
     }
   },
   watch: {
-    //   filtercat() {
-    //    this.setPaginate();
-       
-    // },
- 
+    filtercat () {  
+      this.pages= []
+      this.page = 1
+      this.setPaginate(); 
+      
+    },
   }
 
    

@@ -1,0 +1,7 @@
+cd backend-nodejs-mysql;
+npm run dev;
+
+cd frontend-vue;
+npm run serve;
+
+mysql -u root -p
