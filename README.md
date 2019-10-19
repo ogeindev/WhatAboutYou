@@ -9,7 +9,7 @@ In a console:
   npm install
   npm run dev
   
-In another console
+In another console:
   cd frontend-vue
   npm install
   npm run serve
