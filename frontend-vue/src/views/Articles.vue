@@ -1,0 +1,297 @@
+<template>
+  <div class="Articles ">
+    
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="bg-warning">
+            <!-- <h1 class="pt-3"><router-link to="/addArticles">ADD AN ARTICLE!</router-link></h1> -->
+            <span  v-if="isLoggedIn"> <h1 class="pt-3"><router-link to="/addArticles">ADD AN ARTICLE!</router-link></h1> </span>
+            <span  v-else>  <h2 class="pt-3"> <router-link to="/register">Sign up</router-link> to add an article:  or <router-link to="/login">Sign in</router-link> if you are already registered</h2></span>
+          </div>
+
+          
+            <input  class="searchXSQuery form-control w-50 float-right " v-model="text"  placeholder="Search" aria-label="Search">  
+         
+
+          <!-- Pagination -->
+          <div class="container d-none d-sm-block">
+            <div class="row ">
+              <div class="btn-group col-md-2 offset-md-5 ml-0 pl-0">
+                <button
+                  class="btn btn-sm btn-outline-primary "
+                  type="button"
+                  v-if="page != 1"
+                  @click="page--"
+                >Previous</button>
+                <button
+                @click="page = pageNumber"
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  v-for="pageNumber in pages.slice(page-1, page+5)"
+                  :key="pageNumber"
+                >{{pageNumber}}</button>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  type="button"
+                  @click="page++"
+                  v-if="page < pages.length"
+                >Next</button>
+              </div>
+            </div>
+          </div>
+          <!-- Pagination -->
+
+          <!-- hay que cargar primero el metodo y luego mostrar los usuarios -->
+          
+            <div class="card mb-3 mt-3" v-for="article in paginateArticles" v-bind:key="article.id_article">
+              <div class="card-header">
+                <h1>{{ article.titlearticle}}</h1>
+              </div>
+              <div class="card-body">
+                <h5 class="text-justify">{{ article.textarticle}}</h5>
+              </div>
+              <div class="card-footer">
+                <div class="float-left m-0 autorAndDate">
+                  <h5 class="small text-left">Categoria: {{article.categoryarticle}}</h5>
+                  <h5 class="small text-left">Tags: </h5>
+                  <h5 class="small text-left">Autor: {{article.autorarticle || 'anonymous'}} </h5>
+                </div>
+                <p class="small text-right m-0 autorAndDate posrel">{{article.data_created | moment("calendar")  }}</p>
+              </div> 
+              
+            </div>
+          
+          <!-- Pagination -->
+          <div class="container ">
+            <div class="row">
+              <div class="btn-group col-md-2 offset-md-5">
+                <button
+                  class="btn btn-sm btn-outline-primary "
+                  type="button"
+                  v-if="page != 1"
+                  @click="page--"
+                >Previous</button>
+                <button
+                @click="page = pageNumber"
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  v-for="pageNumber in pages.slice(page-1, page+5)"
+                  :key="pageNumber"
+                >{{pageNumber}}</button>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  type="button"
+                  @click="page++"
+                  v-if="page < pages.length"
+                >Next</button>
+              </div>
+            </div>
+          </div>
+          <!-- Pagination -->
+        </div>
+          
+        
+        
+
+        <div class="col-lg-3 bg-white mt-3 heighCatEtq sideBarQuery">
+          <div>
+            <h3>Categories</h3>
+            <hr />
+            <ul class="categoryfor" v-for="categorylist in categories" v-bind:key="categorylist">
+              <li id="hey" @click="changeCategory(categorylist)">{{categorylist}}</li>
+            </ul>
+           
+            <br />
+          </div>
+          <div>
+            <h3>Etiquetas</h3>
+            <hr />
+            <h4>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque, accusamus animi provident qui quasi pariatur esse dolore ipsum mollitia rem vitae ea debitis sapiente doloremque minima ut adipisci, cum sunt?</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: "Articles",
+  data(){
+    return{
+      allArticles: [],
+      perPage: 5,
+      pages: [],
+      page: 1,
+      text: '',
+      categories:[
+        'Todos',
+        'Psychology',
+        'Social Life',
+        'Physical',
+        'Programming',
+        'Mistery',
+        'Others'
+      ],
+      category: 'Todos',
+      categorylist: '', 
+      filtercat: []   
+    }
+  },
+  mounted:  function() {
+     this.getArticles()      
+  },
+  methods: {
+
+     getArticles(){
+       axios.get('http://localhost:3000/getArticles')
+    
+      .then(response => this.allArticles = response.data)
+      .catch(error => {
+        if (!error.response) {
+            // network error
+            this.errorStatus = 'Error: Network Error';
+        } else {
+            this.errorStatus = error.response.data.message;
+        }
+      })
+    },
+    paginate(filtercat) {
+      let page = this.page;
+      let perPage = this.perPage;
+      let from = page * perPage - perPage;
+      let to = page * perPage;
+      return filtercat.slice(from, to);
+    },
+    setPaginate() {
+      let numberOfPages = Math.ceil(this.filtercat.length / this.perPage);
+      for (let i = 1; i <= numberOfPages; i++) {
+        this.pages.push(i);
+      }
+    },
+    changeCategory(cat){ 
+      this.category = this.category.replace(this.category, cat)
+      console.log(this.category, cat)
+    },
+    
+  },
+  computed: {
+     paginateArticles() {  
+      return  this.paginate(this.categoryFilter);
+    },
+    isLoggedIn: function() {
+      return this.$store.getters.isLoggedIn;
+    },
+    searchArticles: function() {
+      // lowercase in both sides are to turn into a case insensitive
+      return this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+    },
+    categoryFilter(){
+       if(this.category == 'Todos'){
+          let filter1 = this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter1
+          return this.filtercat
+        } 
+        else if (this.category == 'Psychology'){
+          let filter1= this.allArticles.filter((article) => article.categoryarticle.includes('Psychology'))
+          let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter1
+          return this.filtercat
+        }
+        else if (this.category == 'Social Life'){
+          let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Social Life'))
+          let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter1
+          return this.filtercat
+        }
+        else if (this.category == 'Physical'){
+          let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Physical'))
+          let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter1
+          return this.filtercat
+        }
+        else if (this.category == 'Programming'){
+          let filter1= this.allArticles.filter((article) => article.categoryarticle.includes('Programming'))
+          let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter1
+          return this.filtercat
+        }
+        else if (this.category == 'Mistery'){
+          let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Mistery'))
+          let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter1
+          return this.filtercat
+        }
+        else if (this.category == 'Others'){
+           let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Others'))
+           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+           this.filtercat = filter1
+           return this.filtercat
+
+        }
+    }
+  },
+  watch: {
+    //   filtercat() {
+    //    this.setPaginate();
+       
+    // },
+ 
+  }
+
+   
+};
+</script>
+
+<style scoped>
+
+.posrel{
+  position: relative;
+  top: 47px;
+}
+.autorAndDate {
+  display: inline-block;
+  width: 50%;
+}
+.categoryfor {
+  list-style: none;
+  padding: 0%;
+  border: ridge;
+}
+.categoryfor li:hover{
+  background-color: forestgreen;
+  cursor: pointer;
+}
+.container-fluid {
+  background-image: url("../assets/verdeusers.jpg");
+  background-size: cover;
+  background-repeat: repeat-y;
+  height: auto;
+ 
+}
+
+.heighCatEtq{
+  height: 20%;
+  padding-top: 1%;
+  margin-left: 4%;
+  padding-bottom: 5%;
+  width: 33%;
+  
+}
+  /* RESPONSIVE MEDIA QUERY */  
+  @media only screen and (max-width: 600px) and (min-width: 5px)  {  
+    .searchXSQuery{
+      width: 100% !important;
+      margin-bottom: 1rem;
+    }
+  }
+  @media only screen and (max-width: 1000px) and (min-width: 5px)  {  
+    .sideBarQuery{
+      width: 90% !important;
+      
+    }
+  }
+</style>
