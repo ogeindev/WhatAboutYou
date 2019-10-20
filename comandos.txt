@@ -5,3 +5,11 @@ cd frontend-vue;
 npm run serve;
 
 mysql -u root -p
+drop database whataboutyoudb;
+
+----github---
+git add .
+git commit -m 
+git push -u origin master 
+
+*git pull = Incorporates changes from a remote repository into the current branch. 

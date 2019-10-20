@@ -2,25 +2,27 @@
   <div class="Forum">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-3 bg-warning mt-3 ml-3 mb-3 htools topXSQuery">
+        <div class="col-lg-3 m-1 bg-success">
           <!-- <h1 class="pt-3"><router-link to="/addForumpost">ADD AN POST!</router-link></h1> -->
           <span v-if="isLoggedIn">
             <h2 class="pt-3">
-              <router-link to="/addForumpost">ADD AN POSTFORUM!</router-link>
+              <router-link class="text-dark" to="/addForumpost">ADD AN POSTFORUM!</router-link>
             </h2>
           </span>
           <span v-else>
             <h2 class="pt-3">
-              <router-link to="/register">Sign up</router-link>to add an article: or
-              <router-link to="/login">Sign in</router-link>if you are already registered
+              <router-link to="/register">Sign up</router-link> to add an article: or
+              <router-link to="/login">Sign in</router-link> if you are already registered
             </h2>
           </span>
           <hr />
           <br />
-          <h1>barra de categorias</h1>
+          <ul class="categoryfor" v-for="categorylist in categories" v-bind:key="categorylist">
+            <li @click="changeCategory(categorylist)">{{categorylist}}</li>
+          </ul>
           <hr />
           <br />
-          <h1>ayuda</h1>
+          <h1>Tags:</h1>
         </div>
 
         <div class="col-lg-8 ml-3 mt-3 mb-2 querypostsdiv">
@@ -59,20 +61,24 @@
             </div>
             <!-- Pagination -->
           </div>
-        <div class="querypostsfor">
+        <div >
           <div
-            class="bg-dark text-white MarginAndPadding queryposts"
-            v-for="forumpost in searchForum"
+            class="bg-dark text-white MarginAndPadding queryposts "
+            v-for="forumpost in paginateForumposts"
             v-bind:key="forumpost.id_forumpost"
           >
             <div>
               <h1 class="bg-success p-1 text-left">{{forumpost.titleforumpost}}</h1>
 
-              <h5>{{forumpost.textforumpost}}</h5>
+              <h5 class="text-justify paddtext">{{forumpost.textforumpost}}</h5>
               <div>
-                <p class="small text-left m-0 autorAndDate">Autor: {{forumpost.autorforumpost}}</p>
+                <div class="m-0 autorAndDate">
+                  <h5 class="small text-left">Category: {{forumpost.categoryforumpost}}</h5>
+                  <h5 class="small text-left">Tags: </h5>
+                  <h5 class="small text-left">Author: {{forumpost.autorforumpost || 'anonymous'}} </h5>
+                </div>
                 <p
-                  class="small text-right m-0 autorAndDate"
+                  class="small text-right m-0 autorAndDate posrel"
                 >{{forumpost.data_created | moment("calendar") }}</p>
               </div>
             </div>
@@ -121,10 +127,22 @@ export default {
   data() {
     return {
       allForumposts: [],
-      perPage: 10,
+      perPage: 5,
       pages: [],
       page: 1,
-      text: ""
+      text: "",
+      categories:[
+        'Todos',
+        'Psychology',
+        'Social Life',
+        'Physical',
+        'Programming',
+        'Mistery',
+        'Others'
+      ],
+      category: 'Todos',
+      categorylist: '', 
+      filtercat: []  
     };
   },
 
@@ -146,23 +164,26 @@ export default {
         });
     },
 
-    paginate(allForumposts) {
+    paginate(categoryFilter) {
       let page = this.page;
       let perPage = this.perPage;
       let from = page * perPage - perPage;
       let to = page * perPage;
-      return allForumposts.slice(from, to);
+      return categoryFilter.slice(from, to);
     },
     setPaginate() {
-      let numberOfPages = Math.ceil(this.allForumposts.length / this.perPage);
+      let numberOfPages = Math.ceil(this.categoryFilter.length / this.perPage);
       for (let i = 1; i <= numberOfPages; i++) {
         this.pages.push(i);
       }
-    }
+    },
+    changeCategory(cat){ 
+      this.category = this.category.replace(this.category, cat)
+    }, 
   },
   computed: {
     paginateForumposts() {
-      return this.paginate(this.allForumposts);
+      return this.paginate(this.categoryFilter);
     },
     isLoggedIn: function() {
       return this.$store.getters.isLoggedIn;
@@ -171,13 +192,60 @@ export default {
       // lowercase in both sides are to turn into a case insensitive
       return this.paginateForumposts.filter(forumpost =>
         forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase())
-      );
+      )
+    },
+    categoryFilter(){
+      if(this.category == 'Todos'){ 
+          let filter1 = this.allForumposts.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter1
+          return this.filtercat
+        } 
+        else if (this.category == 'Psychology'){
+      
+          let filter1= this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Psychology'))
+          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter
+          return this.filtercat
+        }
+        else if (this.category == 'Social Life'){
+       
+          let filter1 = this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Social Life'))
+          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter
+          return this.filtercat
+        }
+        else if (this.category == 'Physical'){
+          let filter1 = this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Physical'))
+          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter
+          return this.filtercat
+        }
+        else if (this.category == 'Programming'){
+          let filter1= this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Programming'))
+          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter
+          return this.filtercat
+        }
+        if (this.category == 'Mistery'){
+          let filter1 = this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Mistery'))
+          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter
+          return this.filtercat
+        }
+        else if (this.category == 'Others'){
+          let filter1 = this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Others'))
+          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter
+          return this.filtercat
+        }
     }
   },
-  watch: {
-    allForumposts() {
-      this.setPaginate();
-    }
+    watch: {
+    filtercat () {  
+      this.pages= []
+      this.page = 1
+      this.setPaginate(); 
+    },
   }
 };
 </script>
@@ -193,8 +261,8 @@ export default {
   height: auto;
 }
 .MarginAndPadding {
-  padding: 0.5rem;
-  margin: 0.5rem;
+  padding: 1%;
+  margin: 1%;
 }
 .margin0 {
   margin: 0%;
@@ -203,6 +271,22 @@ export default {
   display: inline-block;
   width: 50%;
 }
+.categoryfor {
+  list-style: none;
+  padding: 0%;
+  border: ridge;
+}
+.categoryfor li:hover{
+  background-color: rgb(102, 109, 117);
+  cursor: pointer;
+}
+.paddtext{
+  padding-top: 4%;
+  padding-bottom: 7%;
+  padding-left: 4%;
+  padding-right: 4%;
+}
+
 
 /* RESPONSIVE MEDIA QUERY */
 @media only screen and (max-width: 715px) and (min-width: 5px) {

@@ -12,6 +12,17 @@
                   <input type="text" class="form-control" v-model="titleforumpost" placeholder="Title" autofocus>
                 </div>
                 <div class="form-group">
+                  <strong>Category:</strong>
+                 
+                  <select class="custom-select" v-model="categoryforumpost">
+                    <option disabled value> Select one category</option>
+                    <option v-for="category in categories" v-bind:key="category">
+                      {{category}}
+                    </option>
+                  </select>
+                
+                </div>
+                <div class="form-group">
                   <strong>Text:</strong>
                   <textarea v-model="textforumpost" rows="8" class="form-control" placeholder="Text"></textarea>
                 </div>
@@ -42,7 +53,16 @@ export default {
       titleforumpost: '',
       textforumpost: '',
       user:'',
-      error:''
+      error:'',
+      categories:[
+        'Psychology',
+        'Social Life',
+        'Physical',
+        'Programming',
+        'Mistery',
+        'Others'
+      ],
+      categoryforumpost: ''
     }
   },
   created() {
@@ -63,6 +83,7 @@ export default {
         titleforumpost: this.titleforumpost,
         textforumpost: this.textforumpost,
         autorforumpost: this.user.username,
+        categoryforumpost: this.categoryforumpost,
         id_user: this.user.id_user
       }
       axios.post('http://localhost:3000/addForumpost', newForumpost)

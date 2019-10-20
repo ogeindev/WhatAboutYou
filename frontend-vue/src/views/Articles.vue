@@ -53,9 +53,9 @@
               </div>
               <div class="card-footer">
                 <div class="float-left m-0 autorAndDate">
-                  <h5 class="small text-left">Categoria: {{article.categoryarticle}}</h5>
+                  <h5 class="small text-left">CategorY: {{article.categoryarticle}}</h5>
                   <h5 class="small text-left">Tags: </h5>
-                  <h5 class="small text-left">Autor: {{article.autorarticle || 'anonymous'}} </h5>
+                  <h5 class="small text-left">Author: {{article.autorarticle || 'anonymous'}} </h5>
                 </div>
                 <p class="small text-right m-0 autorAndDate posrel">{{article.data_created | moment("calendar")  }}</p>
               </div> 
@@ -99,8 +99,9 @@
             <h3>Categories</h3>
             <hr />
             <ul class="categoryfor" v-for="categorylist in categories" v-bind:key="categorylist">
-              <li id="hey" @click="changeCategory(categorylist)">{{categorylist}}</li>
+              <li @click="changeCategory(categorylist)">{{categorylist}}</li>
             </ul>
+           
            
             <br />
           </div>
@@ -188,49 +189,47 @@ export default {
       return this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
     },
     categoryFilter(){
-       if(this.category == 'Todos'){
-        
+       if(this.category == 'Todos'){ 
           let filter1 = this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter1
-          console.log(this.filtercat)
           return this.filtercat
         } 
          else if (this.category == 'Psychology'){
       
           let filter1= this.allArticles.filter((article) => article.categoryarticle.includes('Psychology'))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter1
+          this.filtercat = filter
           return this.filtercat
         }
         else if (this.category == 'Social Life'){
        
           let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Social Life'))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter1
+          this.filtercat = filter
           return this.filtercat
         }
         else if (this.category == 'Physical'){
           let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Physical'))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter1
+          this.filtercat = filter
           return this.filtercat
         }
         else if (this.category == 'Programming'){
           let filter1= this.allArticles.filter((article) => article.categoryarticle.includes('Programming'))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter1
+          this.filtercat = filter
           return this.filtercat
         }
          if (this.category == 'Mistery'){
           let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Mistery'))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter1
+          this.filtercat = filter
           return this.filtercat
         }
          else if (this.category == 'Others'){
            let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Others'))
            let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-           this.filtercat = filter1
+           this.filtercat = filter
            return this.filtercat
         }
     }
@@ -240,7 +239,6 @@ export default {
       this.pages= []
       this.page = 1
       this.setPaginate(); 
-      
     },
   }
 
@@ -267,6 +265,7 @@ export default {
   background-color: forestgreen;
   cursor: pointer;
 }
+
 .container-fluid {
   background-image: url("../assets/verdeusers.jpg");
   background-size: cover;
