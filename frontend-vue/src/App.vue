@@ -57,7 +57,15 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-
+#nav {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
 #nav a {
   font-weight: bold;
   color: #2e882b;

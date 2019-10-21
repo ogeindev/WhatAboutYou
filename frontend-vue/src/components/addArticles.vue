@@ -1,9 +1,9 @@
 <template>
   <div class="addArticles">
-    <div class="container p-4">
+    <div class="container-fluid">
       <div class="row">
         
-        <div class="col-md-8">
+        <div class="col-md-8 margtop">
           <div class="card">
             <div class="card-body">
               <form >
@@ -22,6 +22,17 @@
                   </select>
                 
                 </div>
+                <template>
+                  <div class="form-group">
+                    <strong>Tags:</strong>
+                    <vue-tags-input
+                      v-model="tag"  
+                      :tags="tags"
+                      @tags-changed="newTags => tags = newTags"
+                    />
+                  </div>
+                </template>
+                
                 <div class="form-group">
                   <strong>Text:</strong>
                   
@@ -38,16 +49,25 @@
       
             </div>
           </div>
+
+          <pre>{{tag}}</pre>
+          <pre>{{tags}}</pre>
+
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script >
 import axios from "axios";
+import VueTagsInput from '@johmun/vue-tags-input';
 
 export default {
+
+  components: {
+    VueTagsInput,
+  },
   name: "addArticles",
 
   data(){
@@ -64,7 +84,12 @@ export default {
         'Mistery',
         'Others'
       ],
-      categoryarticle: ''
+      categoryarticle: '',
+      tagsarticle:'',
+      tag: '',
+      tags:[]
+     
+
     }
   },
   created() {
@@ -86,6 +111,7 @@ export default {
         textarticle: this.textarticle,
         autorarticle: this.user.username,
         categoryarticle: this.categoryarticle,
+        tagsarticle:  this.getTags(),
         id_user: this.user.id_user
          
 
@@ -112,6 +138,13 @@ export default {
                 this.user = response.data[0]
                 console.log(response)
             });
+    },
+    getTags(){
+      let maptag = this.tags.map((tag) => {
+        return tag.text
+      })
+      let stringTags = maptag.toString()
+      return stringTags
     }
     
 
@@ -121,5 +154,28 @@ export default {
 </script>
 
 <style scoped>
+  .margtop{
+    margin-top:5rem;
+    margin-bottom: 5.5rem;
+    
+  }
+  .card-body{
+    background-color: #2e882b75;
+    height: auto;
 
+    }
+  .container-fluid{
+    background-color: #000000ad;
+    height: auto;   
+  }
+  .row{
+  justify-content: space-around
+  }
+  .tagform{
+    width: 100% 
+  }
+  .vue-tags-input{
+    max-width: 100%;
+  }
+ 
 </style>

@@ -4,10 +4,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-8">
-          <div class="bg-warning">
+          <div class="bg-warning margtop">
             <!-- <h1 class="pt-3"><router-link to="/addArticles">ADD AN ARTICLE!</router-link></h1> -->
             <span  v-if="isLoggedIn"> <h1 class="pt-3"><router-link to="/addArticles">ADD AN ARTICLE!</router-link></h1> </span>
-            <span  v-else>  <h2 class="pt-3"> <router-link to="/register">Sign up</router-link> to add an article:  or <router-link to="/login">Sign in</router-link> if you are already registered</h2></span>
+            <span  v-else>  <h2 class="pt-3"> <router-link to="/register">Sign up</router-link> to add an article  or <router-link to="/login">Sign in</router-link> if you are already registered</h2></span>
           </div>
 
           
@@ -42,6 +42,7 @@
           </div>
           <!-- Pagination -->
 
+
           <!-- hay que cargar primero el metodo y luego mostrar los usuarios -->
           
             <div class="card mb-3 mt-3" v-for="article in paginateArticles" v-bind:key="article.id_article">
@@ -53,9 +54,14 @@
               </div>
               <div class="card-footer">
                 <div class="float-left m-0 autorAndDate">
-                  <h5 class="small text-left">CategorY: {{article.categoryarticle}}</h5>
-                  <h5 class="small text-left">Tags: </h5>
                   <h5 class="small text-left">Author: {{article.autorarticle || 'anonymous'}} </h5>
+                  <h5 class="small text-left">Category: {{article.categoryarticle}}</h5>
+                  <div class="tags">
+                    <h5 class="small text-left">Tags:</h5>   
+                    <div v-for="tag in article.tagsarticle" v-bind:key="tag">   
+                      <h5 class="small ml-1"> {{tag}}</h5>
+                    </div>
+                  </div>
                 </div>
                 <p class="small text-right m-0 autorAndDate posrel">{{article.data_created | moment("calendar")  }}</p>
               </div> 
@@ -106,9 +112,11 @@
             <br />
           </div>
           <div>
-            <h3>Etiquetas</h3>
+            <h3>Tags</h3>
             <hr />
-            <h4>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque, accusamus animi provident qui quasi pariatur esse dolore ipsum mollitia rem vitae ea debitis sapiente doloremque minima ut adipisci, cum sunt?</h4>
+            <div class="categorytag" v-for="tagart in alltags" v-bind:key="tagart">
+              <p v-on:click="changetTag(tagart)">{{tagart}} </p>
+            </div>
           </div>
         </div>
       </div>
@@ -138,17 +146,19 @@ export default {
         'Others'
       ],
       category: 'Todos',
-      categorylist: '', 
-      filtercat: []  
+      filtercat: [],  
+      tagName:'' 
     }
   },
   mounted:  function() {
-     this.getArticles()      
+     this.getArticles() 
   },
   methods: {
      getArticles(){ 
        axios.get('http://localhost:3000/getArticles')
-      .then(response => this.allArticles = response.data)
+      .then( 
+        (response) => {this.allArticles = response.data}
+        )
       .catch(error => {
         if (!error.response) {
             // network error
@@ -174,11 +184,46 @@ export default {
       }
     },
     changeCategory(cat){ 
+      this.categorylist = cat
+      console.log(cat)
       this.category = this.category.replace(this.category, cat)
-    },  
+    }, 
+    changetTag(tag){
+      this.tagart = tag
+      console.log(tag)
+      this.category='nada'
+      this.tagName = this.tagName.replace(this.tagName, tag)
+      
+    }
   },
-  computed: {
-     paginateArticles() { 
+  computed: {  
+    alltags() {
+       let tags = this.allArticles.map((item) => {
+            if (item.tagsarticle == '') {
+                return null
+            } else {
+                return item.tagsarticle.join(',')
+            }
+        })
+        let joinSplitTags = tags.join(',').split(',')
+        let uniqueTag = joinSplitTags.filter(function(item, index, array) {
+            return array.indexOf(item) === index;
+        })
+        return uniqueTag
+
+    },
+    splitTags() {
+        let mapTags = this.allArticles
+        mapTags.map(el => {
+          if (el.tagsarticle == null) {
+              el.tagsarticle = ''
+          } else {
+              return el.tagsarticle = el.tagsarticle.split(',')
+          }
+        })
+        return mapTags
+    },
+    paginateArticles() { 
       return  this.paginate(this.categoryFilter);
     },
     isLoggedIn: function() {
@@ -189,48 +234,23 @@ export default {
       return this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
     },
     categoryFilter(){
-       if(this.category == 'Todos'){ 
-          let filter1 = this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+       if(this.category === 'Todos'){ 
+          let filter1 = this.splitTags.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter1
           return this.filtercat
         } 
-         else if (this.category == 'Psychology'){
+       if (this.category === this.categorylist){
       
-          let filter1= this.allArticles.filter((article) => article.categoryarticle.includes('Psychology'))
+          let filter1= this.splitTags.filter((article) => article.categoryarticle.includes(this.categorylist))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter
           return this.filtercat
         }
-        else if (this.category == 'Social Life'){
-       
-          let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Social Life'))
+        if (this.tagName === this.tagart){
+          let filter1= this.splitTags.filter((article) => article.tagsarticle.includes(this.tagart))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter
           return this.filtercat
-        }
-        else if (this.category == 'Physical'){
-          let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Physical'))
-          let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter
-          return this.filtercat
-        }
-        else if (this.category == 'Programming'){
-          let filter1= this.allArticles.filter((article) => article.categoryarticle.includes('Programming'))
-          let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter
-          return this.filtercat
-        }
-         if (this.category == 'Mistery'){
-          let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Mistery'))
-          let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter
-          return this.filtercat
-        }
-         else if (this.category == 'Others'){
-           let filter1 = this.allArticles.filter((article) => article.categoryarticle.includes('Others'))
-           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-           this.filtercat = filter
-           return this.filtercat
         }
     }
   },
@@ -240,6 +260,7 @@ export default {
       this.page = 1
       this.setPaginate(); 
     },
+  
   }
 
    
@@ -247,7 +268,13 @@ export default {
 </script>
 
 <style scoped>
-
+.margtop{
+  margin-top:4rem;
+ 
+}
+.margtop h1, h2{ 
+  background-color: #6ebe82;
+}
 .posrel{
   position: relative;
   top: 47px;
@@ -265,23 +292,49 @@ export default {
   background-color: forestgreen;
   cursor: pointer;
 }
+.categorytag{
+  display: inline; 
+  padding: 0%; 
+}
+.categorytag p{
+  display: inline; 
+  margin-left: 0.5rem;
+  text-decoration: underline;
+}
+.categorytag p:hover{
+  background-color: #a0e9b3;
+  cursor: pointer;
+}
 
 .container-fluid {
   background-image: url("../assets/verdeusers.jpg");
   background-size: cover;
   background-repeat: repeat-y;
   height: auto;
- 
 }
 
 .heighCatEtq{
   height: 20%;
+  margin-top: 4rem !important;
+  margin-bottom: 4rem;
   padding-top: 1%;
   margin-left: 4%;
   padding-bottom: 5%;
   width: 33%;
-  
 }
+  .heighCatEtq h3{
+    background-color: #6ebe82;
+  }
+  .tags h5{
+    float: left;
+  }
+  .tags div h5:hover{
+    background-color: #a0e9b3;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  
   /* RESPONSIVE MEDIA QUERY */  
   @media only screen and (max-width: 600px) and (min-width: 5px)  {  
     .searchXSQuery{

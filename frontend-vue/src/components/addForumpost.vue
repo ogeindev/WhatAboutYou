@@ -1,9 +1,9 @@
 <template>
-  <div class="addArticles">
-    <div class="container p-4">
+  <div class="addForumpost">
+    <div class="container-fluid">
       <div class="row">
         
-        <div class="col-md-8">
+        <div class="col-md-8 margtop">
           <div class="card">
             <div class="card-body">
               <form >
@@ -114,5 +114,21 @@ export default {
 </script>
 
 <style scoped>
+  .margtop{
+    margin-top:5rem;
+    margin-bottom: 5.5rem;
+    
+  }
+  .card-body{
+    background-color: #2e882b75;
+    height: auto;
 
+    }
+  .container-fluid{
+    background-color: #000000ad;
+    height: auto;   
+  }
+  .row{
+  justify-content: space-around
+  }
 </style>

@@ -2,7 +2,7 @@
   <div class="Forum">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-3 m-1 bg-success">
+        <div class="col-lg-3 m-1 bg-success margtop">
           <!-- <h1 class="pt-3"><router-link to="/addForumpost">ADD AN POST!</router-link></h1> -->
           <span v-if="isLoggedIn">
             <h2 class="pt-3">
@@ -17,6 +17,8 @@
           </span>
           <hr />
           <br />
+          <h3>Categories</h3>
+          <br>
           <ul class="categoryfor" v-for="categorylist in categories" v-bind:key="categorylist">
             <li @click="changeCategory(categorylist)">{{categorylist}}</li>
           </ul>
@@ -25,7 +27,7 @@
           <h1>Tags:</h1>
         </div>
 
-        <div class="col-lg-8 ml-3 mt-3 mb-2 querypostsdiv">
+        <div class="col-lg-8 ml-3 mt-3 mb-2 querypostsdiv ">
           <div class="mb-3">
             <input
               class="inline-block w-50 float-right mr-2 form-control searchXSQuery"
@@ -178,6 +180,7 @@ export default {
       }
     },
     changeCategory(cat){ 
+      this.categorylist = cat
       this.category = this.category.replace(this.category, cat)
     }, 
   },
@@ -200,40 +203,9 @@ export default {
           this.filtercat = filter1
           return this.filtercat
         } 
-        else if (this.category == 'Psychology'){
+        else if (this.category == this.categorylist){
       
-          let filter1= this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Psychology'))
-          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter
-          return this.filtercat
-        }
-        else if (this.category == 'Social Life'){
-       
-          let filter1 = this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Social Life'))
-          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter
-          return this.filtercat
-        }
-        else if (this.category == 'Physical'){
-          let filter1 = this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Physical'))
-          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter
-          return this.filtercat
-        }
-        else if (this.category == 'Programming'){
-          let filter1= this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Programming'))
-          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter
-          return this.filtercat
-        }
-        if (this.category == 'Mistery'){
-          let filter1 = this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Mistery'))
-          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
-          this.filtercat = filter
-          return this.filtercat
-        }
-        else if (this.category == 'Others'){
-          let filter1 = this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes('Others'))
+          let filter1= this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes(this.categorylist))
           let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter
           return this.filtercat
@@ -286,18 +258,32 @@ export default {
   padding-left: 4%;
   padding-right: 4%;
 }
-
+.margtop{
+  margin-top: 5rem !important;
+}
+.querypostsdiv{
+  margin-top: 5rem !important;
+  
+}
 
 /* RESPONSIVE MEDIA QUERY */
+@media only screen and (max-width: 991px) and (min-width: 5px) {
+  .margtop{
+    margin-top: 3.5rem !important;
+  }
+}
 @media only screen and (max-width: 715px) and (min-width: 5px) {
   .searchXSQuery {
     width: 97% !important;
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 1rem !important;
     margin-top: 0.5rem !important;
   }
   .querypostsdiv{
     margin: 0% !important;
     padding: 0% !important;
+  }
+  .margtop{
+    margin-top: 3.5rem !important;
   }
 
 }

@@ -17,7 +17,8 @@ CREATE TABLE articles(
   titlearticle VARCHAR(50) NOT NULL, 
   textarticle TEXT NOT NULL,
   autorarticle VARCHAR(50) NOT NULL,
-  categoryarticle VARCHAR(50) NOT NULL,
+  categoryarticle VARCHAR(50),
+  tagsarticle VARCHAR(100),
   data_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   id_user INT,    
   FOREIGN KEY (id_user) REFERENCES users(id_user)
@@ -36,7 +37,7 @@ CREATE TABLE forumposts(
 
 DESCRIBE users;
 
-INSERT INTO users(username, useremail, userpassword, userage) values ('Juan', 'juan@hotmail.com', 'juan1234', '25');
+INSERT INTO users(username, useremail, userpassword,  userage) values ('Juan', 'juan@hotmail.com', 'juan1234', '25');
 INSERT INTO users(username, useremail, userpassword, userage) values ('Fran', 'fran@hotmail.com', 'fran1234', '22');
 INSERT INTO users(username, useremail, userpassword, userage) values ('Carlos', 'carlos@hotmail.com', 'carlos1234', '29');
 INSERT INTO users(username, useremail, userpassword, userage) values ('Maria', 'maria@hotmail.com', 'maria1234', '39');

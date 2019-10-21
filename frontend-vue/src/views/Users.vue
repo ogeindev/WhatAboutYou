@@ -3,7 +3,7 @@
    
     <div class="container-fluid containerUser">
     <div class="row">
-      <div class="col-lg-10 mt-3 mx-auto ">
+      <div class="col-lg-10 mt-3 mx-auto margtop">
         <div class="active-cyan-3 active-cyan-4 mb-4">
          
           <input  class="form-control" v-model="text"  placeholder="Search" aria-label="Search">
@@ -169,6 +169,9 @@ export default {
     height: 100%;
     padding-bottom: 2%;
 
+  }
+  .margtop{
+    margin-top:5rem !important;
   }
   
 

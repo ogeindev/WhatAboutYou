@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row">
         
-        <div class="col-lg-12 bg-success m-1">
+        <div class="col-lg-12 bg-success m-1 margtop">
           <h1>Hello {{user.username}}!!</h1>
         </div>
 
@@ -104,6 +104,9 @@ export default {
 }
 .leftdiv{
   margin-left: 3.5% !important;
+}
+.margtop{
+  margin-top:5rem !important;
 }
 
 @media only screen and (max-width: 1000px) and (min-width: 5px) {
