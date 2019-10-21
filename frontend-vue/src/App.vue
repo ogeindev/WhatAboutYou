@@ -15,8 +15,8 @@
             <div class="navbar-nav">
             <router-link class="nav-item nav-link" to="/profile">Profile</router-link>
             <router-link class="nav-item nav-link" to="/users">Users</router-link>
-            <router-link class="nav-item nav-link" to="/forum">Forum</router-link>
-            <router-link class="nav-item nav-link mr-3" to="/articles">Articles</router-link>
+            <router-link class="nav-item nav-link" to="/articles">Articles</router-link>
+            <router-link class="nav-item nav-link queryM" to="/forum">Forum</router-link>
 
             <span  v-if="isLoggedIn"> <button class="nav-item nav-link border border-secondary buttonclass" @click="logout">Logout </button></span>
             <span  v-else>  <router-link class="nav-item nav-link border border-secondary" to="/login">Login</router-link></span>
@@ -82,7 +82,17 @@ export default {
   font-weight: bold;
   color: #2e882b;
 }
-
+  .queryM{
+    margin-right: 0.5cm ;
+  }
+  @media only screen and (max-width: 991px) and (min-width: 5px) {
+    .queryM{
+      margin-right: 0;
+    }
+    .buttonclass{
+      width: 100%;
+    }
+  }
 
 
 

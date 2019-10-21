@@ -25,6 +25,9 @@
           <hr />
           <br />
           <h1>Tags:</h1>
+          <div class="categorytag" v-for="tagart in alltags" v-bind:key="tagart">
+            <p v-on:click="changetTag(tagart)">{{tagart}} </p>
+          </div>
         </div>
 
         <div class="col-lg-8 ml-3 mt-3 mb-2 querypostsdiv ">
@@ -75,9 +78,14 @@
               <h5 class="text-justify paddtext">{{forumpost.textforumpost}}</h5>
               <div>
                 <div class="m-0 autorAndDate">
-                  <h5 class="small text-left">Category: {{forumpost.categoryforumpost}}</h5>
-                  <h5 class="small text-left">Tags: </h5>
                   <h5 class="small text-left">Author: {{forumpost.autorforumpost || 'anonymous'}} </h5>
+                  <h5 class="small text-left">Category: {{forumpost.categoryforumpost}}</h5>
+                  <div class="tags">
+                    <h5 class="small text-left">Tags:</h5>   
+                    <div v-for="tag in forumpost.tagsforumpost" v-bind:key="tag">   
+                      <h5 class="small ml-1"> {{tag}}</h5>
+                    </div>
+                  </div>
                 </div>
                 <p
                   class="small text-right m-0 autorAndDate posrel"
@@ -143,8 +151,8 @@ export default {
         'Others'
       ],
       category: 'Todos',
-      categorylist: '', 
-      filtercat: []  
+      filtercat: [] ,
+      tagName:'' 
     };
   },
 
@@ -183,8 +191,41 @@ export default {
       this.categorylist = cat
       this.category = this.category.replace(this.category, cat)
     }, 
+    changetTag(tag){
+      this.tagart = tag
+      console.log(tag)
+      this.category='nada'
+      this.tagName = this.tagName.replace(this.tagName, tag)
+      
+    }
   },
   computed: {
+    alltags() {
+      let tags = this.allForumposts.map((item) => {
+            if (item.tagsforumpost == '') {
+                return null
+            } else {
+                return item.tagsforumpost
+            }
+        })
+        let joinSplitTags = tags.join(',').split(',')
+        let uniqueTag = joinSplitTags.filter(function(item, index, array) {
+            return array.indexOf(item) === index;
+        })
+        return uniqueTag
+
+    },
+    splitTags() {
+        let mapTags = this.allForumposts
+        mapTags.map(el => {
+          if (el.tagsforumpost == null) {
+              el.tagsforumpost = ''
+          } else {
+              return el.tagsforumpost = el.tagsforumpost.split(',')
+          }
+        })
+        return mapTags
+    },
     paginateForumposts() {
       return this.paginate(this.categoryFilter);
     },
@@ -198,18 +239,24 @@ export default {
       )
     },
     categoryFilter(){
-      if(this.category == 'Todos'){ 
-          let filter1 = this.allForumposts.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+      if(this.category === 'Todos'){ 
+          let filter1 = this.splitTags.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter1
           return this.filtercat
         } 
-        else if (this.category == this.categorylist){
+        else if (this.category === this.categorylist){
       
-          let filter1= this.allForumposts.filter((forumpost) => forumpost.categoryforumpost.includes(this.categorylist))
+          let filter1= this.splitTags.filter((forumpost) => forumpost.categoryforumpost.includes(this.categorylist))
           let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter
           return this.filtercat
         }
+        else if (this.tagName === this.tagart){
+          let filter1= this.splitTags.filter((forumpost) => forumpost.tagsforumpost.includes(this.tagart))
+          let filter = filter1.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
+          this.filtercat = filter
+          return this.filtercat
+      }
     }
   },
     watch: {
@@ -265,6 +312,32 @@ export default {
   margin-top: 5rem !important;
   
 }
+.categorytag{
+  display: inline; 
+  padding: 0%; 
+}
+.categorytag p{
+  display: inline; 
+  margin-left: 0.5rem;
+  text-decoration: underline;
+}
+.categorytag p:hover{
+  background-color: #a0e9b3;
+  cursor: pointer;
+}
+.tags h5{
+  float: left;
+}
+.tags div h5:hover{
+  background-color: #a0e9b3;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.posrel{
+  position: relative;
+  top: 24px;
+}
+
 
 /* RESPONSIVE MEDIA QUERY */
 @media only screen and (max-width: 991px) and (min-width: 5px) {

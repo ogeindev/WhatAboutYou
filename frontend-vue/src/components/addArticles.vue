@@ -171,9 +171,7 @@ export default {
   .row{
   justify-content: space-around
   }
-  .tagform{
-    width: 100% 
-  }
+  
   .vue-tags-input{
     max-width: 100%;
   }

@@ -30,6 +30,7 @@ CREATE TABLE forumposts(
   textforumpost TEXT NOT NULL,
   autorforumpost VARCHAR(50) NOT NULL,
   categoryforumpost VARCHAR(50) NOT NULL,
+  tagsforumpost VARCHAR(100),
   data_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   id_user INT,
   FOREIGN KEY (id_user) REFERENCES users(id_user)

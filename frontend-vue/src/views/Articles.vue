@@ -147,7 +147,7 @@ export default {
       ],
       category: 'Todos',
       filtercat: [],  
-      tagName:'' 
+      tagName:''
     }
   },
   mounted:  function() {
@@ -202,7 +202,7 @@ export default {
             if (item.tagsarticle == '') {
                 return null
             } else {
-                return item.tagsarticle.join(',')
+                return item.tagsarticle
             }
         })
         let joinSplitTags = tags.join(',').split(',')
@@ -239,14 +239,14 @@ export default {
           this.filtercat = filter1
           return this.filtercat
         } 
-       if (this.category === this.categorylist){
+       else if (this.category === this.categorylist){
       
           let filter1= this.splitTags.filter((article) => article.categoryarticle.includes(this.categorylist))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter
           return this.filtercat
         }
-        if (this.tagName === this.tagart){
+        else if (this.tagName === this.tagart){
           let filter1= this.splitTags.filter((article) => article.tagsarticle.includes(this.tagart))
           let filter = filter1.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
           this.filtercat = filter

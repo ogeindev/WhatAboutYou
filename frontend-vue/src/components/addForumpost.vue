@@ -22,6 +22,16 @@
                   </select>
                 
                 </div>
+                <template>
+                  <div class="form-group">
+                    <strong>Tags:</strong>
+                    <vue-tags-input
+                      v-model="tag"  
+                      :tags="tags"
+                      @tags-changed="newTags => tags = newTags"
+                    />
+                  </div>
+                </template>
                 <div class="form-group">
                   <strong>Text:</strong>
                   <textarea v-model="textforumpost" rows="8" class="form-control" placeholder="Text"></textarea>
@@ -44,8 +54,12 @@
 
 <script>
 import axios from "axios";
+import VueTagsInput from '@johmun/vue-tags-input';
 
 export default {
+  components: {
+    VueTagsInput,
+  },
   name: "addArticles",
 
   data(){
@@ -62,7 +76,10 @@ export default {
         'Mistery',
         'Others'
       ],
-      categoryforumpost: ''
+      categoryforumpost: '',
+      tagsarticle:'',
+      tag: '',
+      tags:[]
     }
   },
   created() {
@@ -84,6 +101,7 @@ export default {
         textforumpost: this.textforumpost,
         autorforumpost: this.user.username,
         categoryforumpost: this.categoryforumpost,
+        tagsforumpost:  this.getTags(),
         id_user: this.user.id_user
       }
       axios.post('http://localhost:3000/addForumpost', newForumpost)
@@ -108,7 +126,15 @@ export default {
                 this.user = response.data[0]
                 console.log(response)
             });
+    },
+    getTags(){
+      let maptag = this.tags.map((tag) => {
+        return tag.text
+      })
+      let stringTags = maptag.toString()
+      return stringTags
     }
+    
   },
 }
 </script>
@@ -130,5 +156,8 @@ export default {
   }
   .row{
   justify-content: space-around
+  }
+  .vue-tags-input{
+    max-width: 100%;
   }
 </style>
