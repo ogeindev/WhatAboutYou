@@ -50,8 +50,6 @@
             </div>
           </div>
 
-          <pre>{{tag}}</pre>
-          <pre>{{tags}}</pre>
 
         </div>
       </div>
