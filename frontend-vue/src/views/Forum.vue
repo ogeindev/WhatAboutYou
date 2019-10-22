@@ -209,17 +209,26 @@ export default {
             }
         })
         let joinSplitTags = tags.join(',').split(',')
-        let uniqueTag = joinSplitTags.filter(function(item, index, array) {
-            return array.indexOf(item) === index;
+        let quantityNames = joinSplitTags.reduce((counterName, item) => {
+            counterName[item] = ((counterName[item] || 0) + 1);
+            return counterName;
+        }, []);
+        // sorter by quantity
+        let sorterTags = Object.keys(quantityNames).map(e => {
+            let obj = {};
+            obj[e] = quantityNames[e];
+            return obj;
+        }).sort((a, b) => Object.values(b)[0] - Object.values(a)[0])
+        let keysOrder = sorterTags.map((item) => {
+            return Object.keys(item).toString()
         })
-        return uniqueTag
-
+        return keysOrder
     },
     splitTags() {
         let mapTags = this.allForumposts
         mapTags.map(el => {
           if (el.tagsforumpost == null) {
-              el.tagsforumpost = ''
+              return el.tagsforumpost = ''
           } else {
               return el.tagsforumpost = el.tagsforumpost.split(',')
           }

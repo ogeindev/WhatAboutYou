@@ -1,6 +1,6 @@
 <template>
   <div class="Articles ">
-    
+    <pre></pre>
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-8">
@@ -42,7 +42,7 @@
           </div>
           <!-- Pagination -->
 
-
+  
           <!-- hay que cargar primero el metodo y luego mostrar los usuarios -->
           
             <div class="card mb-3 mt-3" v-for="article in paginateArticles" v-bind:key="article.id_article">
@@ -206,17 +206,27 @@ export default {
             }
         })
         let joinSplitTags = tags.join(',').split(',')
-        let uniqueTag = joinSplitTags.filter(function(item, index, array) {
-            return array.indexOf(item) === index;
-        })
-        return uniqueTag
 
-    },
+        let quantityNames = joinSplitTags.reduce((counterName, item) => {
+            counterName[item] = ((counterName[item] || 0) + 1);
+            return counterName;
+        }, []);
+        // sorter by quantity
+        let sorterTags = Object.keys(quantityNames).map(e => {
+            let obj = {};
+            obj[e] = quantityNames[e];
+            return obj;
+        }).sort((a, b) => Object.values(b)[0] - Object.values(a)[0])
+        let keysOrder = sorterTags.map((item) => {
+            return Object.keys(item).toString()
+        })
+        return keysOrder
+      },
     splitTags() {
         let mapTags = this.allArticles
         mapTags.map(el => {
           if (el.tagsarticle == null) {
-              el.tagsarticle = ''
+              return el.tagsarticle = ''
           } else {
               return el.tagsarticle = el.tagsarticle.split(',')
           }

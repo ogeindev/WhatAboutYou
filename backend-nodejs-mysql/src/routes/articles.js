@@ -3,8 +3,8 @@ const router = express.Router();
 const pool = require('../database')
 
 router.post('/addArticles', async(req, res) => {
-    const { titlearticle, textarticle, autorarticle, categoryarticle, tagsarticle, id_user } = req.body;
-    const newArticle = { titlearticle, textarticle, autorarticle, categoryarticle, tagsarticle, id_user };
+    let { titlearticle, textarticle, autorarticle, categoryarticle, tagsarticle, id_user } = req.body;
+    let newArticle = { titlearticle, textarticle, autorarticle, categoryarticle, tagsarticle, id_user };
     await pool.query('INSERT INTO articles set ?', [newArticle])
     console.log('ONE ARTICLE CREATED', newArticle)
 })
