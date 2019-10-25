@@ -12,8 +12,9 @@ router.put('/editUser', async(req, res) => {
 
 ////////////FORUM ////////////////
 // get forumposts by id
-router.get('/getUserForumposts', async(req, res) => {
-        let userForumposts = await pool.query('SELECT * FROM forumposts ORDER BY data_created DESC')
+router.get('/getUserForumposts/:id', async(req, res) => {
+        let { id } = req.params;
+        let userForumposts = await pool.query('SELECT * FROM forumposts Where id_user = ? ORDER BY data_created DESC', [id])
         res.send(userForumposts)
         console.log('Forumposts onloaded')
     })
@@ -43,8 +44,9 @@ router.put('/saveForumpost', async(req, res) => {
 
 //////////// ARTICLEs //////////////
 // get articles by id
-router.get('/getUserArticles', async(req, res) => {
-        let userArticles = await pool.query('SELECT * FROM articles ORDER BY data_created DESC')
+router.get('/getUserArticles/:id', async(req, res) => {
+        let { id } = req.params;
+        let userArticles = await pool.query('SELECT * FROM articles Where id_user = ? ORDER BY data_created DESC', [id])
         res.send(userArticles)
         console.log('userArticles onloaded')
     })

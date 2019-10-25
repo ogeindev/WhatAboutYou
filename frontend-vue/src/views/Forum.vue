@@ -273,6 +273,7 @@ export default {
       this.pages= []
       this.page = 1
       this.setPaginate(); 
+      this.getForumposts();
     },
   }
 };

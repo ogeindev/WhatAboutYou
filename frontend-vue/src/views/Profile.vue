@@ -46,7 +46,7 @@
         <div v-show="postsData" class="col-lg-6 bg-style m-1 ml-3 p-1 divsquery leftdiv">
           <h2 class="bg-white">Posts</h2>
           <div class="t-align-left">
-            <h2 class="bg-green2">My posts</h2>          
+            <h3 class="bg-green2">My posts</h3>          
             <div class="scrollArticles">
 
               <div v-for="userForumpost in userForumposts" v-bind:key="userForumpost.id_forumpost" >
@@ -60,7 +60,7 @@
             <button v-show="backButtonForum"  @click="backButtonForumpost"  class="btn btn-success btn-block mt-1">Back</button>
           </div>
           <div v-show="postsFavData" class="t-align-left">
-            <h2 class="bg-green2">My favorite posts</h2>
+            <h3 class="bg-green2">My favorite posts</h3>
             <p>sdsdsds</p>
             <p>dsdsdsds</p>
           </div>
@@ -150,7 +150,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-user"></i></span>
               </div>
-              <input type="text" class="form-control" name="usernameedit" v-model="usernameedit" placeholder="insert your new username" autofocus>
+              <input type="text" class="form-control" name="usernameedit" v-model="user.username" placeholder="insert your new username" autofocus>
             </div>
 
             
@@ -159,14 +159,14 @@
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-user"></i></span>
               </div>
-              <input type="email" v-model="useremailedit" name="useremailedit" class="form-control" placeholder="insert your new email">
+              <input type="email" v-model="user.useremail" name="useremailedit" class="form-control" placeholder="insert your new email">
             </div>
 
             <div class="input-group form-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-user"></i></span>
               </div>
-              <input type="Number" class="form-control" name="userageedit" v-model="userageedit" placeholder="change your age">
+              <input type="Number" class="form-control" name="userageedit" v-model="user.userage" placeholder="change your age">
             </div>
 
             <div class="form-group">
@@ -226,7 +226,7 @@
       </div>
     </div>
   
-
+    <!-- <pre>{{userForumposts}}</pre> -->
     <!-- <pre>{{user.id_user}}</pre>
     <pre>{{article.tagsarticle}}</pre>
     <pre>{{tags}}</pre>
@@ -261,11 +261,7 @@ export default {
       backButtonArt: false,
       backButtonForum: false,
 
-      // TO CHANGE!
-      usernameedit:'',
-      userageedit: '',
-      useremailedit:'',
-
+   
       //DataAJAX
       userArticles: [],
       userForumposts:[],
@@ -273,7 +269,7 @@ export default {
       forumpost:[],
 
       error:'',
-      //Others
+      //ARTICLE SUPPORT
         categories:[
           'Psychology',
           'Social Life',
@@ -306,11 +302,12 @@ export default {
           console.log(response);
         });
     },
+   
     editUser(){ 
       let newInfUser = {
-        username: this.editName(),
-        userage: this.editAge() ,
-        useremail: this.editEmail() ,
+        username: this.user.username,
+        userage: this.user.userage ,
+        useremail: this.user.useremail,
         id_user: this.user.id_user
       }
       axios.put('http://localhost:3000/editUser', newInfUser )
@@ -329,12 +326,14 @@ export default {
       this.friendsData = true
       this.postsData = true
       this.articlesData =true
-      this.$router.go()
+      
     },
      getUserArticles(){ 
-       axios.get('http://localhost:3000/getUserArticles')
+       let id = this.user.id_user
+       console.log(id)
+       axios.get('http://localhost:3000/getUserArticles/' + id)
       .then( 
-        (response) => {this.userArticles = response.data.filter((article) => article.id_user == this.user.id_user)})
+        (response) => {this.userArticles = response.data})
       .catch(error => {
         if (!error.response) {
             // network error
@@ -344,11 +343,12 @@ export default {
         }
       })
     },
-  
+   
     getUserForumposts(){ 
-       axios.get('http://localhost:3000/getUserForumposts')
+        let id = this.user.id_user
+       axios.get('http://localhost:3000/getUserForumposts/' + id)
       .then( 
-        (response) => {this.userForumposts = response.data.filter((forumpost) => forumpost.id_user == this.user.id_user)})
+        (response) => {this.userForumposts = response.data})
       .catch(error => {
         if (!error.response) {
             // network error
@@ -370,27 +370,7 @@ export default {
       this.postsData = true
       this.articlesData = true
     },
-    editName(){
-      if(this.usernameedit == ''){ 
-        return this.user.username}
-      else{
-        return this.usernameedit
-      }
-    },
-    editAge(){
-      if(this.userageedit == ''){ 
-        return  this.user.userage }
-      else{
-        return this.userageedit
-      }
-    },
-    editEmail(){
-      if(this.useremailedit == '' ){ 
-        return this.user.useremail}
-      else{
-        return this.useremailedit
-      }
-    },
+
      deleteArticle(art){
       let id = art
       console.log(id)
@@ -556,7 +536,13 @@ export default {
       this.forumpostInf = false
       this.backButtonForum = false
     }
-  }
+  },
+  watch: {
+    user(){
+      this.getUserArticles();
+      this.getUserForumposts();
+    }
+  },
 };
 </script>
 

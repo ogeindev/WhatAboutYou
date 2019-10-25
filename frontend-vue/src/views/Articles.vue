@@ -129,7 +129,7 @@ import axios from 'axios';
 
 
 export default {
-  el:'.Articles',
+  name:'Articles',
   data(){
     return{
       allArticles: [],
@@ -269,11 +269,13 @@ export default {
     }
   },
   watch: {
-    filtercat () {  
+    filtercat () { 
       this.pages= []
       this.page = 1
       this.setPaginate(); 
+      this.getArticles();
     },
+
   
   }
 
