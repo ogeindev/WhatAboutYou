@@ -50,7 +50,6 @@
             </div>
           </div>
 
-
         </div>
       </div>
     </div>
@@ -86,8 +85,6 @@ export default {
       tagsarticle:'',
       tag: '',
       tags:[]
-     
-
     }
   },
   created() {
@@ -98,6 +95,7 @@ export default {
   },
   mounted:  function() {    
      this.getUser();
+   
   },
  
   methods: {
@@ -117,8 +115,8 @@ export default {
        axios.post('http://localhost:3000/addArticles', newArticle)
       
        .then(
-         this.$router.push('/articles')
-         
+        //  this.$router.push('/articles')       
+          this.$router.push('/articles')
        ).catch(error => {
         if (!error.response) {
             // network error

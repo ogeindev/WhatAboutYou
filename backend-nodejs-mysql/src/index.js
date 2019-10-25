@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan')
-    // const cors = require('cors')
+const cors = require('cors')
 const passport = require('passport')
     // const session = require('express-session');
     // const MySQLStore = require('express-mysql-session')
@@ -35,7 +35,7 @@ app.use(enableCrossDomain)
 //     saveUninitialized: false,
 //     store: new MySQLStore(database)
 // }))
-// app.use(cors())
+app.use(cors())
 app.use(morgan('dev'));
 // app.use(express.urlencoded({ extended: false }));
 // app.use(express.json());
@@ -56,6 +56,7 @@ app.use('/', require('./routes/forumposts'))
 app.use('/', require('./routes/register'))
 app.use('/', require('./routes/login'))
 app.use('/', require('./routes/users'))
+app.use('/', require('./routes/profile'))
 
 app.listen(app.get('port'), () => {
     console.log('Server on port:', app.get('port'))

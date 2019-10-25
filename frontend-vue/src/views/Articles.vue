@@ -1,5 +1,5 @@
 <template>
-  <div class="Articles ">
+  <div class="Articles">
     <pre></pre>
     <div class="container-fluid">
       <div class="row">
@@ -100,12 +100,12 @@
         
         
 
-        <div class="col-lg-3 bg-white mt-3 heighCatEtq sideBarQuery">
-          <div>
+        <div  class="col-lg-3 bg-white mt-3 heighCatEtq sideBarQuery">
+          <div >
             <h3>Categories</h3>
             <hr />
-            <ul class="categoryfor" v-for="categorylist in categories" v-bind:key="categorylist">
-              <li @click="changeCategory(categorylist)">{{categorylist}}</li>
+            <ul  class="categoryfor" v-for="categorylist in categories" v-bind:key="categorylist">
+              <li  @click="changeCategory(categorylist)">{{categorylist}}</li>
             </ul>
            
            
@@ -115,7 +115,7 @@
             <h3>Tags</h3>
             <hr />
             <div class="categorytag" v-for="tagart in alltags" v-bind:key="tagart">
-              <p v-on:click="changetTag(tagart)">{{tagart}} </p>
+              <p  v-on:click="changetTag(tagart)">{{tagart}} </p>
             </div>
           </div>
         </div>
@@ -127,8 +127,9 @@
 <script>
 import axios from 'axios';
 
+
 export default {
-  name: "Articles",
+  el:'.Articles',
   data(){
     return{
       allArticles: [],
@@ -147,13 +148,14 @@ export default {
       ],
       category: 'Todos',
       filtercat: [],  
-      tagName:''
+      tagName:'',      
     }
   },
-  mounted:  function() {
+  mounted: function() {
      this.getArticles() 
   },
   methods: {
+    
      getArticles(){ 
        axios.get('http://localhost:3000/getArticles')
       .then( 
@@ -176,7 +178,6 @@ export default {
       return categoryFilter.slice(from, to);
     },
     setPaginate() {
-     
       let numberOfPages = Math.ceil(this.categoryFilter.length / this.perPage);
       for (let i = 1; i <= numberOfPages; i++) {
       this.pages.push(i); 
@@ -192,12 +193,15 @@ export default {
       this.tagart = tag
       console.log(tag)
       this.category='nada'
-      this.tagName = this.tagName.replace(this.tagName, tag)
-      
-    }
+      this.tagName = this.tagName.replace(this.tagName, tag) 
+    },
+    asd(){
+      this.$router.go()
+    },
   },
   computed: {  
     alltags() {
+      
        let tags = this.allArticles.map((item) => {
             if (item.tagsarticle == '') {
                 return null
@@ -338,12 +342,12 @@ export default {
   .tags h5{
     float: left;
   }
+
   .tags div h5:hover{
     background-color: #a0e9b3;
     text-decoration: underline;
     cursor: pointer;
   }
-
   
   /* RESPONSIVE MEDIA QUERY */  
   @media only screen and (max-width: 600px) and (min-width: 5px)  {  

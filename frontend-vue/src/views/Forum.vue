@@ -6,7 +6,7 @@
           <!-- <h1 class="pt-3"><router-link to="/addForumpost">ADD AN POST!</router-link></h1> -->
           <span v-if="isLoggedIn">
             <h2 class="pt-3">
-              <router-link class="text-dark" to="/addForumpost">ADD AN POSTFORUM!</router-link>
+              <router-link class="text-dark" to="/addForumpost">ADD AN POST!</router-link>
             </h2>
           </span>
           <span v-else>
