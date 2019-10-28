@@ -1,5 +1,5 @@
 <template>
-  <div class="addArticles">
+  <div  class="addArticles">
     <div class="container-fluid">
       <div class="row">
         
@@ -114,17 +114,17 @@ export default {
       }
        axios.post('http://localhost:3000/addArticles', newArticle)
       
-       .then(
-        //  this.$router.push('/articles')       
-          this.$router.push('/articles')
-       ).catch(error => {
-        if (!error.response) {
-            // network error
+       .then(  
+           this.$router.push('/articles')      
+         ).catch(error => {
+           if (!error.response) {
+             // network error
             this.errorStatus = 'Error: Network Error';
         } else {
-            this.errorStatus = error.response.data.message;
+          this.errorStatus = error.response.data.message;
         }
       })    
+         
     },
     getUser() {
          axios.get("http://localhost:3000/user", {

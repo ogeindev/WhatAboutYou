@@ -158,6 +158,7 @@ export default {
 
   mounted: function() {
     this.getForumposts();
+    
   },
   methods: {
     getForumposts() {
@@ -241,12 +242,12 @@ export default {
     isLoggedIn: function() {
       return this.$store.getters.isLoggedIn;
     },
-    searchForum: function() {
-      // lowercase in both sides are to turn into a case insensitive
-      return this.paginateForumposts.filter(forumpost =>
-        forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase())
-      )
-    },
+    // searchForum: function() {
+    //   // lowercase in both sides are to turn into a case insensitive
+    //   return this.paginateForumposts.filter(forumpost =>
+    //     forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase())
+    //   )
+    // },
     categoryFilter(){
       if(this.category === 'Todos'){ 
           let filter1 = this.splitTags.filter((forumpost) => forumpost.titleforumpost.toLowerCase().includes(this.text.toLowerCase()))
@@ -273,7 +274,7 @@ export default {
       this.pages= []
       this.page = 1
       this.setPaginate(); 
-      this.getForumposts();
+      
     },
   }
 };

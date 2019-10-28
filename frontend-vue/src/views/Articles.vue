@@ -1,5 +1,5 @@
 <template>
-  <div class="Articles">
+  <div  class="Articles">
     <pre></pre>
     <div class="container-fluid">
       <div class="row">
@@ -148,14 +148,13 @@ export default {
       ],
       category: 'Todos',
       filtercat: [],  
-      tagName:'',      
+      tagName:'',          
     }
   },
   mounted: function() {
-     this.getArticles() 
+    this.getArticles() 
   },
   methods: {
-    
      getArticles(){ 
        axios.get('http://localhost:3000/getArticles')
       .then( 
@@ -169,6 +168,7 @@ export default {
             this.errorStatus = error.response.data.message;
         }
       })
+ 
     },
     paginate(categoryFilter) {
       let page = this.page;
@@ -194,9 +194,6 @@ export default {
       console.log(tag)
       this.category='nada'
       this.tagName = this.tagName.replace(this.tagName, tag) 
-    },
-    asd(){
-      this.$router.go()
     },
   },
   computed: {  
@@ -243,10 +240,10 @@ export default {
     isLoggedIn: function() {
       return this.$store.getters.isLoggedIn;
     },
-    searchArticles: function() {
-      // lowercase in both sides are to turn into a case insensitive
-      return this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
-    },
+    // searchArticles: function() {
+    //   // lowercase in both sides are to turn into a case insensitive
+    //   return this.allArticles.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
+    // },
     categoryFilter(){
        if(this.category === 'Todos'){ 
           let filter1 = this.splitTags.filter((article) => article.titlearticle.toLowerCase().includes(this.text.toLowerCase()))
@@ -268,13 +265,14 @@ export default {
         }
     }
   },
-  watch: {
-    filtercat () { 
+  watch: { 
+    filtercat () {   
+      
       this.pages= []
       this.page = 1
-      this.setPaginate(); 
-      this.getArticles();
+      this.setPaginate();  
     },
+  
 
   
   }
